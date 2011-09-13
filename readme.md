@@ -1,1 +1,1 @@
-The wiki for Tea-Fueled Does.
+A simple wiki.
