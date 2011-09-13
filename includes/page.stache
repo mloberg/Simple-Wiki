@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>{{title}}</title>
+	<link rel="stylesheet" href="{{base_url}}stylesheets/style.css" />
+	<!--[if lt IE 9]>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+</head>
+<body>
+<div id="wrapper">
+	<div id="menu">
+		{{> sidebar}}
+	</div>
+	<div id="doc">
+		{{> content}}
+	</div>
+	<div id="toc">
+		{{> toc}}
+	</div>
+	<footer>
+		<p>{{copyright}}</p>
+		<a href="?edit">Edit Page</a> | <a href="?sidebar=edit">Edit Sidebar</a>
+	</footer>
+</div>
+</body>
+</html>
