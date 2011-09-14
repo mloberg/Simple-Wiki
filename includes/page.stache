@@ -11,17 +11,19 @@
 <body>
 <div id="wrapper">
 	<div id="menu">
-		{{> sidebar}}
+{{> sidebar}}
 	</div>
 	<div id="doc">
-		{{> content}}
+{{> content}}
 	</div>
 	<div id="toc">
-		{{> toc}}
+{{> toc}}
 	</div>
 	<footer>
 		<p>{{copyright}}</p>
-		<a href="?edit">Edit Page</a> | <a href="?sidebar=edit">Edit Sidebar</a>
+{{#loggedin}}
+		<a href="?edit=page">Edit Page</a> | <a href="?edit=sidebar">Edit Sidebar</a>
+{{/loggedin}}
 	</footer>
 </div>
 </body>

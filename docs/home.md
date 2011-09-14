@@ -4,7 +4,7 @@ Welcome to the Tea-Fueled Does wiki!
 
 TFD is a php framework written by [Matthew Loberg](http://mloberg.com). It aims to be a fast (in both speed and development time) framework for web apps and high-profile web sites.
 
-TFD draws a lot of it\'s ideas from other Frameworks (CodeIgniter, Ruby on Rails, [IDL](https://github.com/henderjon/idl-v2)) and from experience working with these and other frameworks/applications.
+TFD draws a lot of it's ideas from other Frameworks (CodeIgniter, Ruby on Rails, [IDL](https://github.com/henderjon/idl-v2)) and from experience working with these and other frameworks/applications.
 
 # Features
 

@@ -2,10 +2,15 @@
 	
 	class Wiki{
 	
-		private $template;
-		static private $content;
+		const template = 'includes/page.stache';
+		const sidebar = 'includes/sidebar.md';
+		
+		protected $template;
+		protected static $content;
+		protected static $config = array();
 		
 		function __construct(){
+			session_start();
 			// config
 			$this->config();
 			// mustache for template rendering
@@ -13,32 +18,68 @@
 			$this->template = new Mustache();
 			// Markdown for page formatting
 			include_once('lib/markdown.php');
-			// 
+			// our functions
+			include_once('lib/functions.php');
+			// get this party started
 			$this->bootstrap();
+		}
+		
+		static function redirect($url = ''){
+			header('Location: '.self::$config['site_url'].$url);
+			exit;
 		}
 		
 		function config(){
 			// include our config
-			$config = include_once('config/config.php');
+			self::$config = include_once('config/config.php');
 			// define some stuff
-			define('BASE_URL', $config['site_url']);
+			define('BASE_URL', self::$config['site_url']);
 		}
 		
 		function bootstrap(){
 			// what are we doing with the page?
-			switch($_GET['page']){
-				case 'sidebar':
-					
-					break;
-				case 'add':
-					
-					break;
-				case '':
-					$this->page('home');
-					break;
-				default:
-					$this->page($_GET['page']);
-					break;
+			$p = $_GET['page'];
+			if($p == self::$config['login_path']){
+				Admin::login();
+			}elseif($_GET['edit'] === 'page'){
+				if(Admin::validate()){
+					$this->edit($p);
+				}else{
+					self::redirect($p);
+				}
+			}elseif($_GET['edit'] === 'sidebar'){
+				if(Admin::validate()){
+					$this->sidebar();
+				}else{
+					self::redirect();
+				}
+			}elseif(empty($p)){
+				$this->page('home');
+			}else{
+				$this->page($p);
+			}
+		}
+		
+		function edit($page){
+			if(empty($page)) $page = 'home';
+			if(isset($_POST['submit'])){
+				$fp = fopen('docs/'.$page.'.md', 'w');
+				if(!fwrite($fp, stripslashes($_POST['content']))) die('Could not save page!');
+				fclose($fp);
+				self::redirect($page);
+			}else{
+				self::$content = $this->template->render(file_get_contents('includes/edit.stache'), array('content' => stripslashes(file_get_contents('docs/'.$page.'.md')), 'type' => 'Page'));
+			}
+		}
+		
+		function sidebar(){
+			if(isset($_POST['submit'])){
+				$fp = fopen('includes/sidebar.md', 'w');
+				if(!fwrite($fp, stripslashes($_POST['content']))) die('Could not save sidebar!');
+				fclose($fp);
+				self::redirect();
+			}else{
+				self::$content = $this->template->render(file_get_contents('includes/edit.stache'), array('content' => stripslashes(file_get_contents('includes/sidebar.md')), 'type' => 'Sidebar'));
 			}
 		}
 		
@@ -51,20 +92,51 @@
 		
 		function render(){
 			$info = array(
-				'title' => 'Wiki',
-				'base_url' => 'http://localhost/wiki/',
-				'copyright' => ''
+				'title' => self::$config['site_title'].' - '.page_title($_GET['page']),
+				'base_url' => self::$config['site_url'],
+				'copyright' => self::$config['copyright'],
+				'loggedin' => Admin::validate()
 			);
 			$content = array(
-				'sidebar' => Markdown(file_get_contents('includes/sidebar.md')),
+				'sidebar' => Markdown(file_get_contents(self::sidebar)),
 				'content' => self::$content,
 				'toc' => $this->toc()
 			);
-			return $this->template->render(file_get_contents('includes/page.stache'), $info, $content);
+			return $this->template->render(file_get_contents(self::template), $info, $content);
 		}
 		
 		function toc(){
-			return '';
+			$content = "<h4>Pages</h4>\n";
+			$scan = new DirScan('docs');
+			foreach($scan->files() as $file){
+				$page = preg_replace('/(^docs\/|\.md)/', '', $file);
+				$title = page_title($page);
+				$content .= "<div><a href=\"{$page}\">{$title}</a></div>\n";
+			}
+			return $content;
+		}
+	
+	}
+	
+	class Admin extends Wiki{
+	
+		function validate(){
+			return (md5($_SESSION['username'] . parent::$config['auth_key'] . $_SERVER['HTTP_USER_AGENT']) === $_SESSION['fingerprint']);
+		}
+		
+		function login(){
+			if(isset($_POST['submit'])){
+				$valid_users = implode('|', array_keys(parent::$config['users']));
+				if(preg_match('/^'.preg_quote($valid_users).'$/', $_POST['username']) && parent::$config['users'][$_POST['username']] === $_POST['password']){
+					$_SESSION['username'] = $_POST['username'];
+					$_SESSION['fingerprint'] = md5($_POST['username'] . parent::$config['auth_key'] . $_SERVER['HTTP_USER_AGENT']);
+					self::redirect();
+				}else{
+					self::redirect(parent::$config['login_path']);
+				}
+			}else{
+				parent::$content = $this->template->render(file_get_contents('includes/login.stache'));
+			}
 		}
 	
 	}
