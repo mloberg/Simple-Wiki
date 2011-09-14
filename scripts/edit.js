@@ -40,3 +40,9 @@ key('tab', 'edit', function(){
 });
 
 key.setScope('edit');
+
+function deletePage(){
+	if(confirm("Are you sure you want to delete this page?")){
+		document.forms["delete"].submit();
+	}
+}

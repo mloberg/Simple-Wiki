@@ -55,6 +55,13 @@
 				}else{
 					self::redirect();
 				}
+			}elseif($_GET['edit'] === 'delete'){
+				if(Admin::validate()){
+					if(file_exists('docs/'.$p.'.md')){
+						unlink('docs/'.$p.'.md');
+					}
+				}
+				self::redirect();
 			}elseif(empty($p)){
 				$this->page('home');
 			}else{
@@ -70,7 +77,7 @@
 				fclose($fp);
 				self::redirect($page);
 			}elseif(file_exists('docs/'.$page.'.md')){
-				self::$content = $this->template->render(file_get_contents('includes/edit.stache'), array('content' => stripslashes(file_get_contents('docs/'.$page.'.md')), 'type' => 'Page'));
+				self::$content = $this->template->render(file_get_contents('includes/edit.stache'), array('content' => stripslashes(file_get_contents('docs/'.$page.'.md')), 'type' => 'Page', 'page' => $page, 'delete' => true));
 			}else{
 				self::$content = $this->template->render(file_get_contents('includes/edit.stache'), array('content' => '', 'type' => 'Page'));
 			}
