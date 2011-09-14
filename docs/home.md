@@ -22,12 +22,12 @@ All docs here are formatted with pretty much the same syntax as displayed below:
 
 ## Method Name
 
-Description of the method
+Description of the method.
 
 ### Syntax
 
 	The syntax of the method (e.g. $this->class->method(params))
-
+	
 ### Parameters
 
 * **required parameter name** - (*type*) description of parameter
@@ -41,4 +41,4 @@ Description of the method
 
 	/**
 	 * example of the method
-	 */
+	 */		

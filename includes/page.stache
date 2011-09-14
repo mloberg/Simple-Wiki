@@ -3,7 +3,9 @@
 <head>
 	<meta charset="utf-8" />
 	<title>{{title}}</title>
-	<link rel="stylesheet" href="{{base_url}}stylesheets/style.css" />
+	<base href="{{base_url}}" />
+	<link rel="stylesheet" href="stylesheets/style.css" />
+	<script src="scripts/keymaster.min.js"></script>
 	<!--[if lt IE 9]>
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
@@ -22,9 +24,13 @@
 	<footer>
 		<p>{{copyright}}</p>
 {{#loggedin}}
-		<a href="?edit=page">Edit Page</a> | <a href="?edit=sidebar">Edit Sidebar</a>
+		<a href="{{page}}?edit=page">Edit Page</a> | <a href="?edit=sidebar">Edit Sidebar</a> | <a href="{{logout}}">Logout</a>
+{{/loggedin}}
+{{^loggedin}}
+		<a href="{{login}}">Login</a>
 {{/loggedin}}
 	</footer>
+<script src="scripts/main.js"></script>
 </div>
 </body>
 </html>

@@ -39,7 +39,9 @@
 		function bootstrap(){
 			// what are we doing with the page?
 			$p = $_GET['page'];
-			if($p == self::$config['login_path']){
+			if($p == self::$config['logout_path']){
+				Admin::logout();
+			}elseif($p == self::$config['login_path']){
 				Admin::login();
 			}elseif($_GET['edit'] === 'page'){
 				if(Admin::validate()){
@@ -94,8 +96,11 @@
 			$info = array(
 				'title' => self::$config['site_title'].' - '.page_title($_GET['page']),
 				'base_url' => self::$config['site_url'],
+				'page' => $_GET['page'],
 				'copyright' => self::$config['copyright'],
-				'loggedin' => Admin::validate()
+				'loggedin' => Admin::validate(),
+				'logout' => self::$config['site_url'].self::$config['logout_path'],
+				'login' => self::$config['site_url'].self::$config['login_path']
 			);
 			$content = array(
 				'sidebar' => Markdown(file_get_contents(self::sidebar)),
@@ -137,6 +142,11 @@
 			}else{
 				parent::$content = $this->template->render(file_get_contents('includes/login.stache'));
 			}
+		}
+		
+		function logout(){
+			session_destroy();
+			self::redirect();
 		}
 	
 	}
