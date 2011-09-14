@@ -69,8 +69,10 @@
 				if(!fwrite($fp, stripslashes($_POST['content']))) die('Could not save page!');
 				fclose($fp);
 				self::redirect($page);
-			}else{
+			}elseif(file_exists('docs/'.$page.'.md')){
 				self::$content = $this->template->render(file_get_contents('includes/edit.stache'), array('content' => stripslashes(file_get_contents('docs/'.$page.'.md')), 'type' => 'Page'));
+			}else{
+				self::$content = $this->template->render(file_get_contents('includes/edit.stache'), array('content' => '', 'type' => 'Page'));
 			}
 		}
 		
@@ -87,9 +89,15 @@
 		
 		function page($page){
 			if(!file_exists('docs/'.$page.'.md')){
-			
+				// send a 404
+				header('HTTP/1.1 404 Not Found');
+				self::$content = '<p>That page does not exist.</p>';
+				if(Admin::validate()){
+					self::$content .= '<p><a href="'.$page.'?edit=page">Add this page?</a></p>';
+				}
+			}else{
+				self::$content = Markdown(file_get_contents('docs/'.$page.'.md'));
 			}
-			self::$content = Markdown(file_get_contents('docs/'.$page.'.md'));
 		}
 		
 		function render(){
@@ -97,7 +105,6 @@
 				'title' => self::$config['site_title'].' - '.page_title($_GET['page']),
 				'base_url' => self::$config['site_url'],
 				'page' => $_GET['page'],
-				'copyright' => self::$config['copyright'],
 				'loggedin' => Admin::validate(),
 				'logout' => self::$config['site_url'].self::$config['logout_path'],
 				'login' => self::$config['site_url'].self::$config['login_path']
@@ -105,7 +112,8 @@
 			$content = array(
 				'sidebar' => Markdown(file_get_contents(self::sidebar)),
 				'content' => self::$content,
-				'toc' => $this->toc()
+				'toc' => $this->toc(),
+				'copyright' => $this->copyright()
 			);
 			return $this->template->render(file_get_contents(self::template), $info, $content);
 		}
@@ -119,6 +127,12 @@
 				$content .= "<div><a href=\"{$page}\">{$title}</a></div>\n";
 			}
 			return $content;
+		}
+		
+		function copyright(){
+			if(!empty(self::$config['copyright'])){
+				return 'Copyright &copy; '.date('Y', time()).' '.self::$config['copyright'];
+			}
 		}
 	
 	}

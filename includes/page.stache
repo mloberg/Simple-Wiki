@@ -22,12 +22,12 @@
 {{> toc}}
 	</div>
 	<footer>
-		<p>{{copyright}}</p>
+		<p>{{> copyright}}</p>
 {{#loggedin}}
-		<a href="{{page}}?edit=page">Edit Page</a> | <a href="?edit=sidebar">Edit Sidebar</a> | <a href="{{logout}}">Logout</a>
+		<a href="{{page}}?edit=page">Edit Page</a> | <a href="?edit=sidebar">Edit Sidebar</a> | <a id="login" href="{{logout}}">Logout</a>
 {{/loggedin}}
 {{^loggedin}}
-		<a href="{{login}}">Login</a>
+		<a id="login" href="{{login}}">Login</a>
 {{/loggedin}}
 	</footer>
 <script src="scripts/main.js"></script>

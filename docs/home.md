@@ -1,44 +1,23 @@
-# Tea-Fueled Does
+# Simple Wiki
 
-Welcome to the Tea-Fueled Does wiki!
+Simple Wiki is a free, lightweight, self-contained, easy to edit, database-less wiki written by [Matthew Loberg](http://mloberg.com/).
 
-TFD is a php framework written by [Matthew Loberg](http://mloberg.com). It aims to be a fast (in both speed and development time) framework for web apps and high-profile web sites.
+## Installing
 
-TFD draws a lot of it's ideas from other Frameworks (CodeIgniter, Ruby on Rails, [IDL](https://github.com/henderjon/idl-v2)) and from experience working with these and other frameworks/applications.
+### 1) Getting Simple Wiki
 
-# Features
+If you have git installed:
 
-* Fast (in both speed and development time)
-* [Multiple Environments](environments)
-* Built-in Auth Class
-* [Command Line Interface](tea)
-* [Migrations](tea/migrations)
+	git@github.com:mloberg/Simple-Wiki.git
 
-# Read Me
+If you don't have git or don't know, you can [download the zip here.](https://github.com/mloberg/Simple-Wiki/zipball/master)
 
-All docs here are formatted with pretty much the same syntax as displayed below:
+### 2) Edit your config
 
-# 
+After you have a copy of Simple Wiki, you need to edit the config in *config/config.php*.
 
-## Method Name
+Here you can set your site title, url, and any admin users.
 
-Description of the method.
+### 3) Start editing your wiki
 
-### Syntax
-
-	The syntax of the method (e.g. $this->class->method(params))
-	
-### Parameters
-
-* **required parameter name** - (*type*) description of parameter
-* optional parameter - (*type*) description of parameter
-
-### Return
-
-* (*return type*) return description
-
-### Example
-
-	/**
-	 * example of the method
-	 */		
+Once you have an admin user setup, you can login and start editing pages. Pages have support for [Markdown](http://daringfireball.net/projects/markdown/).
