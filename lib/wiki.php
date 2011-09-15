@@ -62,10 +62,32 @@
 					}
 				}
 				self::redirect();
+			}elseif($_GET['add'] === 'page'){
+				if(Admin::validate()){
+					$this->add();
+				}else{
+					self::redirect();
+				}
 			}elseif(empty($p)){
 				$this->page('home');
 			}else{
 				$this->page($p);
+			}
+		}
+		
+		function add(){
+			if(isset($_POST['page'])){
+				$page = $_POST['page'];
+				if(file_exists('docs/'.$page.'.md')){
+					die('Page already exists!');
+				}else{
+					$fp = fopen('docs/'.$page.'.md', 'w');
+					if(!fwrite($fp, stripslashes($_POST['content']))) die('Could not add page!');
+					fclose($fp);
+					self::redirect($page);
+				}
+			}else{
+				self::$content = $this->template->render(file_get_contents('includes/add.stache'));
 			}
 		}
 		

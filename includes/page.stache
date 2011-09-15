@@ -24,7 +24,7 @@
 	<footer>
 		<p>{{> copyright}}</p>
 {{#loggedin}}
-		<a href="{{page}}?edit=page">Edit Page</a> | <a href="?edit=sidebar">Edit Sidebar</a> | <a id="login" href="{{logout}}">Logout</a>
+		<a href="{{page}}?edit=page">Edit Page</a> | <a href="?edit=sidebar">Edit Sidebar</a> | <a href="?add=page">Add Page</a> | <a id="login" href="{{logout}}">Logout</a>
 {{/loggedin}}
 {{^loggedin}}
 		<a id="login" href="{{login}}">Login</a>

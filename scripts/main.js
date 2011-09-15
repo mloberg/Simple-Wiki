@@ -10,6 +10,6 @@ key('l', 'main', function(){
 	return false;
 });
 
-if(key.getScope() !== 'edit'){
+if(key.getScope() === 'all'){
 	key.setScope('main');
 }
