@@ -29,14 +29,14 @@
 			exit;
 		}
 		
-		function config(){
+		private function config(){
 			// include our config
 			self::$config = include_once('config/config.php');
 			// define some stuff
 			define('BASE_URL', self::$config['site_url']);
 		}
 		
-		function bootstrap(){
+		private function bootstrap(){
 			// what are we doing with the page?
 			$p = $_GET['page'];
 			if($p == self::$config['logout_path']){
@@ -62,6 +62,12 @@
 					}
 				}
 				self::redirect();
+			}elseif($_GET['edit'] === 'rename'){
+				if(Admin::validate()){
+					$this->rename_page($p);
+				}else{
+					self::redirect($p);
+				}
 			}elseif($_GET['add'] === 'page'){
 				if(Admin::validate()){
 					$this->add();
@@ -75,7 +81,7 @@
 			}
 		}
 		
-		function add(){
+		private function add(){
 			if(isset($_POST['page'])){
 				$page = $_POST['page'];
 				if(file_exists('docs/'.$page.'.md')){
@@ -91,9 +97,17 @@
 			}
 		}
 		
-		function edit($page){
+		private function rename_page($page){
+			if(isset($_POST['page_name'])){
+				rename('docs/'.$page.'.md', 'docs/'.$_POST['page_name'].'.md');
+				self::redirect($_POST['page_name']);
+			}
+			self::redirect($page);
+		}
+		
+		private function edit($page){
 			if(empty($page)) $page = 'home';
-			if(isset($_POST['submit'])){
+			if(isset($_POST['editPage'])){
 				$fp = fopen('docs/'.$page.'.md', 'w');
 				if(!fwrite($fp, stripslashes($_POST['content']))) die('Could not save page!');
 				fclose($fp);
@@ -105,7 +119,7 @@
 			}
 		}
 		
-		function sidebar(){
+		private function sidebar(){
 			if(isset($_POST['submit'])){
 				$fp = fopen('includes/sidebar.md', 'w');
 				if(!fwrite($fp, stripslashes($_POST['content']))) die('Could not save sidebar!');
@@ -116,7 +130,7 @@
 			}
 		}
 		
-		function page($page){
+		private function page($page){
 			if(!file_exists('docs/'.$page.'.md')){
 				// send a 404
 				header('HTTP/1.1 404 Not Found');

@@ -2,14 +2,18 @@
 <form action="" method="post" id="edit">
 	<textarea name="content">{{content}}</textarea><br />
 	<div class="fltright">* <a href="http://daringfireball.net/projects/markdown/syntax" target="_blank">Markdown</a> supported</div>
-	<input id="submit" type="submit" name="submit" value="Edit {{type}}" />
+	<input id="editPage" type="submit" name="editPage" value="Edit {{type}}" />
 {{#delete}}
-	<input type="button" name="delete" value="Delete page" onclick="javascript:deletePage();" />
+	<input type="button" name="delete" value="Delete page" onclick="javascript: deletePage();" />
+	<input type="button" name="rename" value="Rename Page" onclick="javascript: renamePage('{{page}}');" />
 {{/delete}}
 </form>
 {{#delete}}
 <form action="{{page}}?edit=delete" method="post" id="delete">
 	<input type="hidden" name="delete" value="true" />
+</form>
+<form action="{{page}}?edit=rename" method="post" id="rename">
+	<input type="hidden" name="page_name" id="pageName" />
 </form>
 {{/delete}}
 <script src="scripts/edit.js"></script>

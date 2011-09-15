@@ -1,7 +1,7 @@
 document.getElementsByTagName("textarea")[0].focus();
 
 key('command+s,ctrl+s', 'edit', function(){
-	document.getElementById("submit").click();
+	document.getElementById("editPage").click();
 	return false;
 });
 key('tab', 'edit', function(){
@@ -45,4 +45,12 @@ function deletePage(){
 	if(confirm("Are you sure you want to delete this page?")){
 		document.forms["delete"].submit();
 	}
+}
+
+function renamePage(pageName){
+	do{
+		var pageName = prompt("What would you like to rename the page to?\n(only alphanumeric, -, and _ are allowed)", pageName);
+	}while(!pageName.match(/^([a-zA-Z0-9]|\-|\_)+$/));
+	document.getElementById("pageName").value = pageName;
+	document.forms["rename"].submit();
 }

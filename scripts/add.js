@@ -42,7 +42,7 @@ key('tab', 'add', function(){
 key.setScope('add');
 
 function formSubmit(){
-	if(document.getElementById("page").value == '' || !document.getElementById("page").value.match(/([a-zA-Z0-9]|\-|\_)+/)){
+	if(document.getElementById("page").value == '' || !document.getElementById("page").value.match(/^([a-zA-Z0-9]|\-|\_)+$/)){
 		// show error message
 		document.getElementById("formError").innerHTML = "Invalid page name!";
 		document.getElementById("page").focus();

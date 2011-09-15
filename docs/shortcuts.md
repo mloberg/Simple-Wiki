@@ -16,3 +16,4 @@ The tab button will insert a tab, rather then remove the focus from the editing 
 
 * Edit page - `e`
 * Edit sidebar - `s`
+* Add Page - `a`
