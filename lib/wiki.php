@@ -120,7 +120,7 @@
 		}
 		
 		private function sidebar(){
-			if(isset($_POST['submit'])){
+			if(isset($_POST['editPage'])){
 				$fp = fopen('includes/sidebar.md', 'w');
 				if(!fwrite($fp, stripslashes($_POST['content']))) die('Could not save sidebar!');
 				fclose($fp);
