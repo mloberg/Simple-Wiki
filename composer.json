@@ -1,0 +1,12 @@
+{
+    "require": {
+        "php": ">=5.3.0",
+        "silex/silex": "1.*",
+        "twig/twig": "1.*",
+        "symfony/twig-bridge": "~2.3",
+        "ircmaxell/password-compat": "1.*",
+        "illuminate/filesystem": "4.1",
+        "michelf/php-markdown": "1.4.0",
+        "mnapoli/front-yaml": "1.0.2"
+    }
+}
