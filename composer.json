@@ -8,5 +8,10 @@
         "illuminate/filesystem": "4.1",
         "michelf/php-markdown": "1.4.0",
         "mnapoli/front-yaml": "1.0.2"
+    },
+    "autoload": {
+        "classmap": [
+            "app/lib"
+        ]
     }
 }

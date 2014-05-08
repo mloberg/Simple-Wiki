@@ -19,8 +19,12 @@ $app['config'] = array(
     'title'    => 'Simple Wiki',
 );
 
+$app['users'] = array(
+    'admin' => '$2y$10$7KQSYuRdW.T6Ls92lW7GAeq/zkbEYYm9RJ5HzK50Cl9EsZVDszaJ2', # admin:admin
+);
+
 $app->register(new TwigServiceProvider(), array(
-    'twig.path'    => __DIR__.'/_templates',
+    'twig.path'    => __DIR__.'/app/views',
     'twig.options' => array(
         'strict_variables' => false,
     )
@@ -28,6 +32,8 @@ $app->register(new TwigServiceProvider(), array(
 
 $app->register(new SessionServiceProvider());
 $app->register(new UrlGeneratorServiceProvider());
+$app->register(new RedirectServiceProvider());
+$app->register(new FlashServiceProvider());
 
 $app['filesystem'] = $app->share(function() {
     return new Filesystem;
@@ -37,17 +43,49 @@ $app['parser'] = $app->share(function() {
     return new Parser();
 });
 
-$app['render'] = $app->protect(function($file) use($app) {
+$app['render'] = $app->protect(function($file) use ($app) {
     $raw = $app['filesystem']->get($file);
     $document = $app['parser']->parse($raw, false);
     $config = array_merge($app['config'], $document->getYAML());
+    if ($app['session']->has('user')) {
+        $config = array_merge($config, $app['session']->get('user'));
+    }
     $config['content'] = MarkdownExtra::defaultTransform($document->getContent());
     return $app['twig']->render($config['template'] . '.twig', $config);
 });
 
+if ($app['debug']) {
+    $app->get('/password', function(Request $request) use ($app) {
+        return password_hash($request->get('password'), PASSWORD_BCRYPT, array("cost" => 10));
+    });
+}
+
+$app->get('/login', function() use ($app) {
+    return $app['twig']->render('login.twig');
+})->bind('login');
+
+$app->post('/login', function(Request $request) use ($app) {
+    $username = $request->get('username');
+    $password = $request->get('password');
+    if (isset($app['users'][$username]) && password_verify($password, $app['users'][$username])) {
+        $app['session']->set('user', array(
+            'username'  => $username,
+            'logged_in' => true,
+        ));
+        return $app['redirect.route']('page', array('page' => 'index'));
+    } else {
+        $app['flash']->error('Invalid username/password');
+        return $app['redirect.route']('login');
+    }
+});
+
+$app->get('/logout', function() use ($app) {
+    $app['session']->clear();
+    return $app['redirect.route']('page', array('page' => 'index'));
+});
+
 $app->get('/{page}', function(Request $request, $page) use ($app) {
-    // Find a match
-    $files = glob('_content/' . $page . '.*');
+    $files = glob(__DIR__.'/app/content/' . $page . '.*');
     if (!$files) {
         $app->abort(404);
     } else {
