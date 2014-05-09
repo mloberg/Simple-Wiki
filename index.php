@@ -43,6 +43,14 @@ $app['parser'] = $app->share(function() {
     return new Parser();
 });
 
+$app['findFile'] = $app->protect(function($page) use ($app) {
+    $files = $app['filesystem']->glob(__DIR__ . '/app/content/' . $page . '.*');
+    if (!$files) {
+        return false;
+    }
+    return $files[0];
+});
+
 $app['render'] = $app->protect(function($file) use ($app) {
     $raw = $app['filesystem']->get($file);
     $document = $app['parser']->parse($raw, false);
@@ -89,11 +97,9 @@ $app->get('/logout', function() use ($app) {
 })->bind('logout');
 
 $app->get('/{page}', function(Request $request, $page) use ($app) {
-    $files = glob(__DIR__ . '/app/content/' . $page . '.*');
-    if (!$files) {
-        $app->abort(404);
-    } else {
-        $file = $files[0];
+    $file = $app['findFile']($page);
+    if (!$file) {
+        return $app->abort(404);
     }
     return $app['render']($file);
 })
@@ -106,8 +112,8 @@ $app->post('/{page}', function(Request $request, $page) use ($app) {
         $app['flash']->error('Must be logged in to do that.');
         $app['redirect.route']('login');
     }
-    $files = glob(__DIR__ . '/app/content/' . $page . '.*');
-    if (!$files) {
+    $file = $app['findFile']($page);
+    if (!$file) {
         # New file
         $file = __DIR__ . '/app/content/' . $page . '.md';
         # Make sure directory exists
@@ -115,8 +121,6 @@ $app->post('/{page}', function(Request $request, $page) use ($app) {
         if (!$app['filesystem']->isDirectory($dirname)) {
             $app['filesystem']->makeDirectory($dirname);
         }
-    } else {
-        $file = $files[0];
     }
     $app['filesystem']->put($file, str_replace("\r\n", "\n", $request->get('content')));
     return $app['redirect.route']('page', array('page' => $page));
