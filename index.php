@@ -46,9 +46,13 @@ $app['parser'] = $app->share(function() {
 $app['render'] = $app->protect(function($file) use ($app) {
     $raw = $app['filesystem']->get($file);
     $document = $app['parser']->parse($raw, false);
-    $config = array_merge($app['config'], $document->getYAML());
+    $config = $app['config'];
+    if (is_array($document->getYAML())) {
+        $config = array_merge($config, $document->getYAML());
+    }
     if ($app['session']->has('user')) {
         $config = array_merge($config, $app['session']->get('user'));
+        $config['markdown'] = $raw;
     }
     $config['content'] = MarkdownExtra::defaultTransform($document->getContent());
     return $app['twig']->render($config['template'] . '.twig', $config);
@@ -94,6 +98,23 @@ $app->get('/{page}', function(Request $request, $page) use ($app) {
     return $app['render']($file);
 })
 ->bind('page')
+->value('page', 'index')
+->assert('page', '.+');
+
+$app->post('/{page}', function(Request $request, $page) use ($app) {
+    if (!$app['session']->has('user')) {
+        $app['flash']->error('Must be logged in to do that.');
+        $app['redirect.route']('login');
+    }
+    $files = glob(__DIR__.'/app/content/' . $page . '.*');
+    if (!$files) {
+        $app->abort(404);
+    } else {
+        $file = $files[0];
+    }
+    $app['filesystem']->put($file, str_replace("\r\n", "\n", $request->get('content')));
+    return $app['redirect.route']('page', array('page' => $page));
+})
 ->value('page', 'index')
 ->assert('page', '.+');
 

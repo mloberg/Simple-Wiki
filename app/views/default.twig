@@ -41,13 +41,40 @@
             <a href="{{ path('page', {page: 'index'}) }}">Home</a>
           </li>
         </ul>
+        {% if logged_in %}
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#edit" data-toggle="modal" data-target="#markdownEditorModal">Edit Page</a></li>
+          </ul>
+        {% endif %}
       </div><!--/.nav-collapse -->
     </div>
   </div>
 
   <div class="container">
     {{ content|raw }}
-  </div> <!-- /container -->
+  </div><!-- /container -->
+
+  {% if logged_in %}
+    <div class="modal fade" id="markdownEditorModal" tabindex="-1" role="dialog" aria-labelledby="markdownEditorModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="markdownEditorModalLabel">Edit Page</h4>
+          </div>
+          <form method="post">
+            <div class="modal-body">
+              <textarea name="content" class="form-control" rows="10">{{ markdown|raw }}</textarea>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  {% endif %}
 
   <script src="{{ app.request.basepath }}/assets/js/jquery.min.js"></script>
   <script src="{{ app.request.basepath }}/assets/js/bootstrap.min.js"></script>
