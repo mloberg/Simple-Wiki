@@ -43,7 +43,15 @@
         </ul>
         {% if logged_in %}
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#edit" data-toggle="modal" data-target="#markdownEditorModal">Edit Page</a></li>
+            <li>
+              <a href="#edit" data-toggle="modal" data-target="#markdownEditorModal">Edit Page</a>
+            </li>
+            <li>
+              <a href="#add" data-toggle="modal" data-target="#addPageModal">Add Page</a>
+            </li>
+            <li>
+              <a href="{{ path('logout') }}">Logout</a>
+            </li>
           </ul>
         {% endif %}
       </div><!--/.nav-collapse -->
@@ -74,6 +82,40 @@
         </div>
       </div>
     </div>
+
+    <div class="modal fade" id="addPageModal" tabindex="-1" role="dialog" aria-labelledby="addPageModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="addPageModalLabel">Add Page</h4>
+          </div>
+          <form id="addPage" method="post" class="form-horizontal" role="form">
+            <div class="modal-body">
+              <textarea name="content" class="form-control" rows="10" placeholder="Content"></textarea>
+              <br>
+              <input type="text" class="form-control" id="path" placeholder="Path">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" onclick="addPageCallback()" class="btn btn-primary">Add Page</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script>
+      function addPageCallback() {
+        var $form = $("#addPage"),
+            path = $("#path").val();
+        if (!path) {
+          alert("Please enter a path");
+          return;
+        }
+        $form.attr('action', path);
+        $form.submit();
+      }
+    </script>
   {% endif %}
 
   <script src="{{ app.request.basepath }}/assets/js/jquery.min.js"></script>

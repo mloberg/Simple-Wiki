@@ -86,7 +86,7 @@ $app->post('/login', function(Request $request) use ($app) {
 $app->get('/logout', function() use ($app) {
     $app['session']->clear();
     return $app['redirect.route']('page', array('page' => 'index'));
-});
+})->bind('logout');
 
 $app->get('/{page}', function(Request $request, $page) use ($app) {
     $files = glob(__DIR__.'/app/content/' . $page . '.*');
