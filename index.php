@@ -89,7 +89,7 @@ $app->get('/logout', function() use ($app) {
 })->bind('logout');
 
 $app->get('/{page}', function(Request $request, $page) use ($app) {
-    $files = glob(__DIR__.'/app/content/' . $page . '.*');
+    $files = glob(__DIR__ . '/app/content/' . $page . '.*');
     if (!$files) {
         $app->abort(404);
     } else {
@@ -106,9 +106,15 @@ $app->post('/{page}', function(Request $request, $page) use ($app) {
         $app['flash']->error('Must be logged in to do that.');
         $app['redirect.route']('login');
     }
-    $files = glob(__DIR__.'/app/content/' . $page . '.*');
+    $files = glob(__DIR__ . '/app/content/' . $page . '.*');
     if (!$files) {
-        $app->abort(404);
+        # New file
+        $file = __DIR__ . '/app/content/' . $page . '.md';
+        # Make sure directory exists
+        $dirname = dirname($file);
+        if (!$app['filesystem']->isDirectory($dirname)) {
+            $app['filesystem']->makeDirectory($dirname);
+        }
     } else {
         $file = $files[0];
     }
