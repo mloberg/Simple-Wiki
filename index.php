@@ -12,7 +12,7 @@ use Mni\FrontYAML\Parser;
 use Michelf\MarkdownExtra;
 
 $app = new Application();
-$app['debug'] = true;
+$app['debug'] = false;
 
 $app['contentDir'] = __DIR__ . '/app/content';
 
@@ -67,12 +67,6 @@ $app['render'] = $app->protect(function($file) use ($app) {
     $config['content'] = MarkdownExtra::defaultTransform($document->getContent());
     return $app['twig']->render($config['template'] . '.twig', $config);
 });
-
-if ($app['debug']) {
-    $app->get('/password', function(Request $request) use ($app) {
-        return password_hash($request->get('password'), PASSWORD_BCRYPT, array("cost" => 10));
-    });
-}
 
 $app->get('/login', function() use ($app) {
     return $app['twig']->render('login.twig');
@@ -133,6 +127,8 @@ $app->post('/{page}', function(Request $request, $page) use ($app) {
 if (php_sapi_name() !== 'cli') {
     Request::enableHttpMethodParameterOverride();
     $app->run();
+} elseif ($argv[1] === 'genpass') {
+    echo password_hash($argv[2], PASSWORD_BCRYPT, array("cost" => 10)) . PHP_EOL;
 } else {
     $app->boot();
 }
