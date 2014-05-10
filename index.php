@@ -14,6 +14,8 @@ use Michelf\MarkdownExtra;
 $app = new Application();
 $app['debug'] = true;
 
+$app['contentDir'] = __DIR__ . '/app/content';
+
 $app['config'] = array(
     'template' => 'default',
     'title'    => 'Simple Wiki',
@@ -44,7 +46,7 @@ $app['parser'] = $app->share(function() {
 });
 
 $app['findFile'] = $app->protect(function($page) use ($app) {
-    $files = $app['filesystem']->glob(__DIR__ . '/app/content/' . $page . '.*');
+    $files = $app['filesystem']->glob($app['contentDir'] . '/' . $page . '.*');
     if (!$files) {
         return false;
     }
@@ -115,7 +117,7 @@ $app->post('/{page}', function(Request $request, $page) use ($app) {
     $file = $app['findFile']($page);
     if (!$file) {
         # New file
-        $file = __DIR__ . '/app/content/' . $page . '.md';
+        $file = $app['contentDir'] . '/' . $page . '.md';
         # Make sure directory exists
         $dirname = dirname($file);
         if (!$app['filesystem']->isDirectory($dirname)) {
