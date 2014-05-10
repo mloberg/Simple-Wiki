@@ -11,7 +11,7 @@ you to add and edit pages from the web application.
 If you have [Composer](https://getcomposer.org) installed you can use the
 `create-project` command to install Simple Wiki.
 
-    composer create-project mlo/simple-wiki
+    composer create-project mlo/simple-wiki path/to/project
 
 ## Configuring
 
