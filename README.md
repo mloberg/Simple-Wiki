@@ -1,34 +1,38 @@
 # Simple Wiki
 
-Simple Wiki is a lightweight, database-less wiki written in PHP. It's goal is to be easy to install and edit pages. It uses Silex, Twig, and Markdown.
+Simple Wiki is a database-less wiki. It renders pages from Markdown and allows
+you to add and edit pages from the web application.
 
 ## Installing
 
-### 1) Getting Simple Wiki
+If you have [Composer](https://getcomposer.org) installed you can use the
+`create-project` command to install Simple Wiki.
 
-If you have git installed:
+    composer create-project mlo/simple-wiki
 
-	git clone git@github.com:mloberg/Simple-Wiki.git
+## Configuring
 
-If you don't have git or don't know, you can [download the zip here.](https://github.com/mloberg/Simple-Wiki/zipball/master)
+Simple Wiki allows you to edit your pages through the web application if an
+user is logged in. Users are defined in `index.php`.
 
-### 2) Edit your config
+    $app['users'] = array(
+        'username' => 'bcrypted password',
+    );
 
-After you have a copy of Simple Wiki, you need to edit the config in *config/config.php*.
+To generate a bcrypted password run `php index.php genpass [password]`.
 
-Here you can set your site title, url, and any admin users.
+## Pages
 
-### 3) Start editing your wiki
+Pages are stored in `app/content`, but can be changed using the `contentDir`
+setting. These pages are Markdown files with support for YAML Front Matter.
 
-Once you have an admin user setup, you can login and start editing pages. Pages have support for [Markdown](http://daringfireball.net/projects/markdown/).
+    ---
+    title: Page Title
+    ---
+    Page content
 
-## Adding A Page
+## Hacking
 
-To add a page you can either click on the Add Page link in the footer once you have logged in, or simply go to the path of the page you want and click "Add this page".
+Simple Wiki is built using Silex and Twig and can be modified to fit your needs.
 
-## Issues
-
-If you are having issues editing or adding pages, you may need to change some file permissions.
-
-	chmod 777 docs
-	chmod 777 includes
+If you add something cool, create a pull request for it.
