@@ -1,9 +1,0 @@
-<h1>Add Page</h1>
-<form name="addPage" action="" method="post" id="edit">
-	<textarea name="content"></textarea><br />
-	<div class="fltright">* <a href="http://daringfireball.net/projects/markdown/syntax" target="_blank">Markdown</a> supported</div>
-	<label for="page">Page Name: </label>
-	<input type="text" name="page" id="page" /> (alphanumeric and -_ characters only)<br />
-	<input id="add-page" type="button" name="add-page" value="Add Page" onclick="javascript: formSubmit()" /> <span id="formError" class="error"></span>
-</form>
-<script src="scripts/add.js"></script>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>{{ title }}</title>
+  <link href="{{ app.request.basepath }}/assets/css/bootstrap.min.css" rel="stylesheet">
+
+  <style type="text/css">
+    .navbar-static-top {
+      margin-bottom: 19px;
+    }
+  </style>
+
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+
+  <!-- Static navbar -->
+  <div class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="{{ path('page', {page: 'index'}) }}">Simple Wiki</a>
+      </div>
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li>
+            <a href="{{ path('page', {page: 'index'}) }}">Home</a>
+          </li>
+        </ul>
+        {% if logged_in %}
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a href="#edit" data-toggle="modal" data-target="#markdownEditorModal">Edit Page</a>
+            </li>
+            <li>
+              <a href="#add" data-toggle="modal" data-target="#addPageModal">Add Page</a>
+            </li>
+            <li>
+              <a href="{{ path('logout') }}">Logout</a>
+            </li>
+          </ul>
+        {% endif %}
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>
+
+  <div class="container">
+    {{ content|raw }}
+  </div><!-- /container -->
+
+  {% if logged_in %}
+    <div class="modal fade" id="markdownEditorModal" tabindex="-1" role="dialog" aria-labelledby="markdownEditorModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="markdownEditorModalLabel">Edit Page</h4>
+          </div>
+          <form method="post">
+            <div class="modal-body">
+              <textarea name="content" class="form-control" rows="10">{{ markdown|raw }}</textarea>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="addPageModal" tabindex="-1" role="dialog" aria-labelledby="addPageModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="addPageModalLabel">Add Page</h4>
+          </div>
+          <form id="addPage" method="post" class="form-horizontal" role="form">
+            <div class="modal-body">
+              <textarea name="content" class="form-control" rows="10" placeholder="Content"></textarea>
+              <br>
+              <input type="text" class="form-control" id="path" placeholder="Path">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" onclick="addPageCallback()" class="btn btn-primary">Add Page</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script>
+      function addPageCallback() {
+        var $form = $("#addPage"),
+            path = $("#path").val();
+        if (!path) {
+          alert("Please enter a path");
+          return;
+        }
+        $form.attr('action', path);
+        $form.submit();
+      }
+    </script>
+  {% endif %}
+
+  <script src="{{ app.request.basepath }}/assets/js/jquery.min.js"></script>
+  <script src="{{ app.request.basepath }}/assets/js/bootstrap.min.js"></script>
+</body>
+</html>
