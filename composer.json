@@ -1,4 +1,8 @@
 {
+    "name": "mlo/simple-wiki",
+    "description": "Simple database-less wiki",
+    "keywords": ["wiki"],
+    "license": "MIT",
     "require": {
         "php": ">=5.3.0",
         "silex/silex": "1.*",
