@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__.'/vendor/autoload.php';
+require_once __DIR__.'/../vendor/autoload.php';
 
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
@@ -10,11 +10,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Filesystem\Filesystem;
 use Mni\FrontYAML\Parser;
 use Michelf\MarkdownExtra;
+use Mlo\SimpleWiki\Provider\FlashServiceProvider;
+use Mlo\SimpleWiki\Provider\RedirectServiceProvider;
 
 $app = new Application();
 $app['debug'] = false;
 
-$app['contentDir'] = __DIR__ . '/app/content';
+$app['contentDir'] = __DIR__ . '/../app/content';
 
 $app['config'] = array(
     'template' => 'default',
@@ -26,7 +28,7 @@ $app['users'] = array(
 );
 
 $app->register(new TwigServiceProvider(), array(
-    'twig.path'    => __DIR__.'/app/views',
+    'twig.path'    => __DIR__.'/../app/views',
     'twig.options' => array(
         'strict_variables' => false,
     )

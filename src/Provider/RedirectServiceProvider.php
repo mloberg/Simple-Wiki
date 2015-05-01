@@ -1,5 +1,7 @@
 <?php
 
+namespace Mlo\SimpleWiki\Provider;
+
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 

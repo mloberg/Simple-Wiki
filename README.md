@@ -31,6 +31,12 @@ setting. These pages are Markdown files with support for YAML Front Matter.
     ---
     Page content
 
+## Running
+
+You can run Simple Wiki locally using PHP's built in web server (PHP >=5.4).
+
+    php -S 127.0.0.1:4000 -t web server.php
+
 ## Hacking
 
 Simple Wiki is built using Silex and Twig and can be modified to fit your needs.
